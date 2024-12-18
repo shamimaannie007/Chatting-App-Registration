@@ -1,23 +1,46 @@
 
 import React, { useState } from "react";
 import { auth } from "./firebase";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+
+
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("Account created successfully!");
+      navigate("/Chat"); // Navigate to the Welcome page
     } catch (err) {
       setError(err.message);
     }
   };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      alert("Google Sign-In successful!");
+      navigate("/Chat"); // Navigate to the Welcome page
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  
+  
+  
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row justify-center items-center  sm:px-8 lg:px-16 bg-gray-100">
@@ -93,9 +116,17 @@ const Register = () => {
 
         {/* Social Login Buttons */}
         <div className="flex justify-center gap-[40px]">
-          <button className="w-20 h-20 bg-gray-100 flex items-center justify-center rounded-full shadow">
+          {/* <button className="w-20 h-20 bg-gray-100 flex items-center justify-center rounded-full shadow">
+            <img src="/Frame 14.png" alt="Google" />
+
+          </button> */}
+          <button
+            className="w-20 h-20 bg-gray-100 flex items-center justify-center rounded-full shadow"
+            onClick={handleGoogleSignIn}
+          >
             <img src="/Frame 14.png" alt="Google" />
           </button>
+
           <button className="w-20 h-20 bg-gray-100 flex items-center justify-center rounded-full shadow">
             <img src="/Frame 15.png" alt="Facebook" />
           </button>
